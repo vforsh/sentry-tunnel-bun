@@ -21,25 +21,6 @@ A tunnel is an HTTP endpoint that acts as a proxy between Sentry and your applic
 
 - [Bun](https://bun.sh/) 1.2.2 or higher
 
-## Installation
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/yourusername/sentry-tunnel-bun.git
-   cd sentry-tunnel-bun
-   ```
-
-2. Install dependencies:
-   ```bash
-   bun install
-   ```
-
-3. Configure environment variables:
-   ```bash
-   cp .env.template .env
-   ```
-   Edit the `.env` file to set your configuration.
-
 ## Configuration
 
 The following environment variables can be configured:
@@ -49,34 +30,6 @@ The following environment variables can be configured:
 - `NODE_ENV`: Environment mode (`development`, `production`, or `test`, default: `development`)
 - `SSL_CERT_PATH`: Path to SSL certificate file (optional, enables HTTPS when provided)
 - `SSL_KEY_PATH`: Path to SSL key file (optional, enables HTTPS when provided)
-
-## Protocol Selection
-
-The server automatically selects the protocol based on the availability of SSL certificates:
-
-- If both `SSL_CERT_PATH` and `SSL_KEY_PATH` are provided and valid, the server will use HTTPS
-- Otherwise, the server will use HTTP
-
-## SSL Certificate Setup (Optional)
-
-To enable HTTPS:
-
-1. Generate or obtain SSL certificates
-2. Update your `.env` file with the certificate paths:
-   ```
-   SSL_CERT_PATH=./certs/cert.pem
-   SSL_KEY_PATH=./certs/key.pem
-   ```
-
-## CORS Support
-
-The server includes built-in CORS (Cross-Origin Resource Sharing) support to handle preflight requests properly. This ensures that browsers can make requests to the tunnel endpoint from different origins without issues. The CORS configuration:
-
-- Allows requests from any origin (`*`)
-- Supports `GET`, `POST`, and `OPTIONS` methods
-- Allows common headers like `Content-Type` and `User-Agent`
-- Exposes headers like `Content-Length` and `X-Sentry-Error`
-- Caches preflight requests for 24 hours to improve performance
 
 ## Usage
 
