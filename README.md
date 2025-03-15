@@ -27,7 +27,7 @@ The following environment variables can be configured:
 
 - `ALLOWED_PROJECT_IDS`: Comma-separated list of allowed project IDs (leave empty to allow all)
 - `PORT`: Port to listen on (default: `3010`)
-- `NODE_ENV`: Environment mode (`development`, `production`, or `test`, default: `development`)
+- `ENV`: Environment mode (`development`, `production`, or `test`, default: `development`)
 - `SSL_CERT_PATH`: Path to SSL certificate file (optional, enables HTTPS when provided)
 - `SSL_KEY_PATH`: Path to SSL key file (optional, enables HTTPS when provided)
 

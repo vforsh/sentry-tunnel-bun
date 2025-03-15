@@ -9,7 +9,7 @@ const ALLOWED_PROJECT_IDS = env.ALLOWED_PROJECT_IDS.split(',')
 	.filter(Boolean)
 
 // Environment settings
-const isDev = env.NODE_ENV === 'development'
+const isDev = env.ENV === 'development'
 
 // Check if SSL certificates are configured
 const certPath = env.SSL_CERT_PATH
@@ -178,7 +178,7 @@ export const app = new Elysia({
 		console.log(
 			`${getTimestamp()} ${useHttps ? '🔒' : '🚀'} Sentry Tunnel Server is running at ${protocol}://localhost:${env.PORT}`,
 		)
-		console.log(`${getTimestamp()} 🌍 Environment: ${env.NODE_ENV}`)
+		console.log(`${getTimestamp()} 🌍 Environment: ${env.ENV}`)
 
 		console.log(
 			`${getTimestamp()} 📋 Allowed Project IDs: ${ALLOWED_PROJECT_IDS.length > 0 ? ALLOWED_PROJECT_IDS.join(', ') : 'All'}`,
