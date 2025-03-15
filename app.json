@@ -1,5 +1,5 @@
 {
-    "name": "sentry-tunnel",
+    "name": "sentry-tunnel-bun",
     "description": "A lightweight and fast Sentry tunnel implementation using Bun and Elysia",
     "repository": "https://github.com/vforsh/sentry-tunnel-bun",
     "keywords": ["bun", "sentry", "tunnel", "elysia"],

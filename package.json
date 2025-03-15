@@ -6,7 +6,8 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"build": "bun build src/index.ts --outdir dist --target bun",
-		"start:prod": "bun run dist/index.js"
+		"start:prod": "bun run dist/index.js",
+		"deploy": "git push dokku main"
 	},
 	"dependencies": {
 		"@elysiajs/cors": "^1.2.0",
