@@ -8,5 +8,18 @@
         "predeploy": "bun install --frozen-lockfile",
         "postdeploy": "echo 'Sentry Tunnel deployed successfully!'"
       }
+    },
+    "healthchecks": {
+      "web": [
+        {
+          "type": "http",
+          "name": "web-check",
+          "description": "Checking if the web server is responsive",
+          "path": "/health",
+          "attempts": 3,
+          "timeout": 5,
+          "initial_delay": 5
+        }
+      ]
     }
   }

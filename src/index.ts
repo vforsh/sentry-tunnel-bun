@@ -65,6 +65,14 @@ export const app = new Elysia({
 		devLog('Received request to root endpoint')
 		return 'Sentry Tunnel Server is running'
 	})
+	.get('/health', () => {
+		devLog('Received request to health endpoint')
+		return {
+			status: 'healthy',
+			timestamp: new Date().toISOString(),
+			uptime: process.uptime()
+		}
+	})
 	.post(
 		'/tunnel',
 		async ({
