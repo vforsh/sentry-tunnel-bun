@@ -1,0 +1,35 @@
+{
+	"name": "sentry-tunnel-bun",
+	"scripts": {
+		"start": "bun run --hot src/index.ts",
+		"typecheck-dev": "bunx tsc --watch --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"build": "bun build src/index.ts --outdir dist --target bun",
+		"start:prod": "bun run dist/index.js"
+	},
+	"dependencies": {
+		"@elysiajs/cors": "^1.2.0",
+		"@open-draft/until": "^2.1.0",
+		"@t3-oss/env-core": "^0.11.1",
+		"@types/fs-extra": "^11.0.4",
+		"@types/lodash-es": "^4.17.12",
+		"elysia": "^1.2.25",
+		"fs-extra": "^11.2.0",
+		"globby": "^14.0.2",
+		"lodash-es": "^4.17.21",
+		"prettier": "^3.3.3",
+		"prettier-plugin-organize-imports": "^4.1.0",
+		"type-fest": "^4.27.0",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@tsconfig/bun": "^1.0.7",
+		"@types/bun": "latest",
+		"typescript": "^5.7.3",
+		"vitest": "^1.4.0"
+	},
+	"engines": {
+		"bun": "1.2.2"
+	}
+}

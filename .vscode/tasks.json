@@ -1,0 +1,48 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Start Dev Server",
+			"type": "npm",
+			"script": "start",
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Deploy",
+			"type": "npm",
+			"script": "deploy",
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "TypeScript Watch",
+			"type": "npm",
+			"script": "typecheck-dev",
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": ["$tsc-watch"],
+			"isBackground": true
+		},
+		{
+			"label": "Start Dev",
+			"dependsOn": ["Start Dev Server", "TypeScript Watch"],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": ["$tsc-watch"]
+		}
+	]
+}
