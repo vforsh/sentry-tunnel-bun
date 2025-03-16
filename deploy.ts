@@ -4,20 +4,19 @@ import { execSync } from 'child_process'
 import { existsSync, readFileSync } from 'fs'
 
 // Configuration
-const APP_NAME = 'sentry-tunnel-bun'
 const ENV_FILE = '.env.prod'
 const DOKKU_REMOTE = 'dokku'
 const BRANCH = 'main'
 
 // Main function
 async function main() {
-	console.log(`Starting deployment process for ${APP_NAME}...`)
+	console.log(`Starting deployment process...`)
 
 	// Step 1: Backup current environment variables (in memory only)
 	console.log('Backing up current environment variables...')
 	let currentEnvVars
 	try {
-		const output = execSync(`dokku config:export ${APP_NAME}`, {
+		const output = execSync(`dokku config:export`, {
 			encoding: 'utf-8',
 			stdio: ['ignore', 'pipe', 'pipe'],
 		})
@@ -25,6 +24,7 @@ async function main() {
 		// Parse the output to get current env vars
 		currentEnvVars = parseExportFormat(output)
 		console.log('Environment backup created in memory')
+		console.log(`Backed up ${Object.keys(currentEnvVars).length} environment variables`)
 	} catch (error) {
 		console.error(`Error backing up environment variables: ${error.message}`)
 		console.error('Continuing without backup (no rollback will be possible)')
@@ -42,6 +42,7 @@ async function main() {
 
 	// Build a single config:set command with all variables
 	const newEnvVars: string[] = []
+	const envKeys: string[] = []
 
 	for (const line of envLines) {
 		// Skip comments and empty lines
@@ -54,7 +55,10 @@ async function main() {
 		const value = valueParts.join('=') // Rejoin in case value contains = characters
 
 		if (key && value !== undefined) {
-			newEnvVars.push(`${key.trim()}=${value.trim()}`)
+			const trimmedKey = key.trim()
+			// Use the escape function for the value
+			newEnvVars.push(`${trimmedKey}=${escapeEnvValue(value.trim())}`)
+			envKeys.push(trimmedKey)
 		}
 	}
 
@@ -64,9 +68,14 @@ async function main() {
 		// Set all environment variables in a single command
 		try {
 			console.log(`Setting ${newEnvVars.length} environment variables...`)
+			console.log('Environment variables being set:')
+			envKeys.forEach((key) => console.log(`- ${key}`))
+
+			// Build the command
+			const configSetCmd = `dokku config:set --no-restart ${newEnvVars.join(' ')}`
 
 			// Execute the command
-			execSync(`dokku config:set --no-restart ${APP_NAME} ${newEnvVars.join(' ')}`, {
+			execSync(configSetCmd, {
 				stdio: ['ignore', 'pipe', 'pipe'],
 			})
 
@@ -89,6 +98,19 @@ async function main() {
 		await rollbackEnv(currentEnvVars)
 		process.exit(1)
 	}
+}
+
+// Helper function to escape environment variable values
+// Based on Dokku documentation: https://dokku.com/docs/configuration/environment-variables/
+function escapeEnvValue(value: string): string {
+	// If the value contains spaces, newlines, or special characters, wrap it in single quotes
+	// and escape any existing single quotes
+	if (/[\s\n\r\t'"\\$&|<>^;()!]/.test(value)) {
+		// Escape single quotes by replacing ' with '\''
+		const escapedValue = value.replace(/'/g, "'\\''")
+		return `'${escapedValue}'`
+	}
+	return value
 }
 
 // Helper function to parse export format from dokku config:export
@@ -118,14 +140,19 @@ async function rollbackEnv(backupEnvVars: Record<string, string> | undefined) {
 
 	try {
 		console.log('Rolling back to previous environment variables...')
+		console.log('Rolling back the following environment variables:')
+		Object.keys(backupEnvVars).forEach((key) => console.log(`- ${key}`))
 
-		// Format env vars for dokku command
+		// Format env vars for dokku command with proper escaping
 		const envVarArgs = Object.entries(backupEnvVars)
-			.map(([key, value]) => `${key}=${value}`)
+			.map(([key, value]) => `${key}=${escapeEnvValue(value)}`)
 			.join(' ')
 
+		// Build the rollback command
+		const rollbackCmd = `dokku config:set ${envVarArgs}`
+
 		// Execute the rollback command
-		execSync(`dokku config:set ${APP_NAME} ${envVarArgs}`, {
+		execSync(rollbackCmd, {
 			stdio: ['ignore', 'pipe', 'pipe'],
 		})
 
