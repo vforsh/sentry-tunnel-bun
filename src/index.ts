@@ -8,11 +8,6 @@ const ALLOWED_PROJECT_IDS = env.ALLOWED_PROJECT_IDS.split(',')
 	.map((id) => id.trim())
 	.filter(Boolean)
 
-// Define the allowed organization IDs
-const ALLOWED_ORGS = env.ALLOWED_ORGS.split(',')
-	.map((org) => org.trim())
-	.filter(Boolean)
-
 // Environment settings
 const isDev = env.ENV === 'development'
 
@@ -135,15 +130,6 @@ export const app = new Elysia({
 					return { error: `Invalid project ID: ${projectId}` }
 				}
 
-				// Validate the organization ID if ALLOWED_ORGS is not empty
-				if (ALLOWED_ORGS.length > 0 && !ALLOWED_ORGS.includes(username)) {
-					devLog(
-						`[${requestId}] Invalid organization ID: ${username}, allowed: ${ALLOWED_ORGS.join(', ')}`,
-					)
-					set.status = 403
-					return { error: `Invalid organization ID: ${username}` }
-				}
-
 				// Construct the Sentry API URL
 				const sentryUrl = `https://${host}/api/${projectId}/envelope/?sentry_key=${username}`
 				devLog(`[${requestId}] Forwarding to Sentry URL: ${sentryUrl}`)
@@ -196,9 +182,6 @@ export const app = new Elysia({
 
 		console.log(
 			`${getTimestamp()} 📋 Allowed Project IDs: ${ALLOWED_PROJECT_IDS.length > 0 ? ALLOWED_PROJECT_IDS.join(', ') : 'All'}`,
-		)
-		console.log(
-			`${getTimestamp()} 🏢 Allowed Organization IDs: ${ALLOWED_ORGS.length > 0 ? ALLOWED_ORGS.join(', ') : 'All'}`,
 		)
 	})
 
