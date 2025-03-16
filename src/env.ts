@@ -10,6 +10,7 @@ export const env = createEnv({
 
 	client: {
 		ALLOWED_PROJECT_IDS: z.string().default(''),
+		ALLOWED_ORGS: z.string().default(''),
 		PORT: z.string().default('3010'),
 		ENV: z.enum(['development', 'production', 'test']).default('development'),
 		SSL_CERT_PATH: z.string().optional(),
